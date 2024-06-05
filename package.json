@@ -1,9 +1,9 @@
 {
   "name": "pride-products-be",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.jsx",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon server.jsx"
   },
   "keywords": [],
   "author": "",

@@ -1,9 +1,9 @@
 {
   "name": "pride-products-be",
   "version": "1.0.0",
-  "main": "server.jsx",
+  "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.jsx"
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

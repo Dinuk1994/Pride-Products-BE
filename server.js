@@ -13,10 +13,13 @@ app.use(fileUpload({
     useTempFiles: true
 }));
 
+app.use('/user', require('./routers/userRouter'));
+
 // Connect to MongoDB
 const connectDB = async () => {
     try {
         const URI = process.env.MONGODB_URL;
+
         await mongoose.connect(URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true

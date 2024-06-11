@@ -24,7 +24,7 @@ const userController = {
                 httpOnly: true,
                 path: '/user/refresh_token'
             })
-            return res.json({ msg: "Register Successfull" })
+            return res.json({ accessToken })
 
         } catch (error) {
             return res.status(500).json({ msg: error.message })
@@ -38,10 +38,25 @@ const userController = {
 
             const isMatch = await bcrypt.compare(password, user.password)
             if (!isMatch) return res.status(400).json({ msg: "Incorrect Password" })
+            const accessToken = createAccessToken({ id: user._id })
+            const refreshToken = createRefreshToken({ id: user._id })
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                path: '/user/refresh_token'
+            })
+            return res.json({ accessToken })
 
-            return res.json({ msg: "Login success" })
         } catch (error) {
             return res.status(500).json({ msg: error.message })
+        }
+    },
+    logoout: async (req, res) => {
+        try {
+            res.clearCookie('refreshToken', { path: '/user/refresh_token' })
+            return res.json({ msg: "Logged Out" })
+
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
         }
     },
     refreshToken: async (req, res) => {
@@ -54,6 +69,16 @@ const userController = {
                 const accessToken = createAccessToken({ id: user.id })
                 return res.json({ accessToken })
             })
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+    getUser: async (req, res) => {
+        try {
+            const user = await users.findById(req.user.id)
+            if (!user) return res.status(400).json({ msg: "User does not exists" })
+            return res.json({ user })
+
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }

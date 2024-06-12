@@ -14,6 +14,7 @@ app.use(fileUpload({
 }));
 
 app.use('/user', require('./routers/userRouter'));
+app.use('/api', require('./routers/categoryRouter'));
 
 // Connect to MongoDB
 const connectDB = async () => {

@@ -32,6 +32,15 @@ const categoryController = {
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
+    },
+    updateCategory : async(req,res)=>{
+        try {
+            const {name} = req.body;
+            await categoryName.findOneAndUpdate({_id : req.params.id},{name})
+            return res.json({msg : "category updated success"})
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
     }
 }
 

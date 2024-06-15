@@ -5,7 +5,7 @@ class APIfeatures {
         this.query = query;
         this.queryString = queryString;
     }
-    filtering(){
+    filtering(){  //http://localhost:5000/api/products?price=1500   //  http://localhost:5000/api/products?price[gte]=4500(more than products price 4500)  //http://localhost:5000/api/products?price[lte]=4500(less than products price 4500)
         const queryObj = {...this.queryString}
         const excludedFields = ['page','sort','limit']
         excludedFields.forEach(ele=>delete(queryObj[ele]))
@@ -15,7 +15,7 @@ class APIfeatures {
         this.query = this.query.find(JSON.parse(queryStr))
         return this;
     }
-    sorting(){
+    sorting(){ //http://localhost:5000/api/products?sort=price
         if(this.queryString.sort){
             const sortBy = this.queryString.sort.split(',').join(' ')
             this.query = this.query.sort(sortBy)
@@ -24,16 +24,26 @@ class APIfeatures {
         }
         return this;
     }
-    paginating(){}
+    paginating(){//http://localhost:5000/api/products?limit=2
+        const page = this.queryString.page * 1 || 1
+        const limit = this.queryString.limit * 1 || 3 //selecting how many items that needs to display on a page
+        const skip = (page - 1) * limit
+        this.query = this.query.skip(skip).limit(limit)
+        return this;
+    }
 }
 
 const productController = {
 
     getProducts: async (req, res) => {
         try {
-            const features = new APIfeatures(products.find(),req.query).filtering().sorting()
+            const features = new APIfeatures(products.find(),req.query).filtering().sorting().paginating()
             const product = await features.query
-            return res.json(product)
+            return res.json({
+                status : "success",
+                result : product.length,
+                product
+            })
 
         } catch (err) {
             return res.status(500).json({ msg: err.message })

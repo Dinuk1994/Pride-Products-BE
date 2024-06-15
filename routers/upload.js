@@ -10,7 +10,7 @@ cloudinary.config({
     api_secret: process.env.CLOUD_API_SECRET_KEY
 })
 
-router.post('/upload', (req, res) => {
+router.post('/upload', auth,authAdmin,(req, res) => {
     try {
         console.log(req.files);
         if (!req.files || (!req.files.file && !req.files.undefined)) {
@@ -19,7 +19,7 @@ router.post('/upload', (req, res) => {
 
         const file = req.files.file ? req.files.file : req.files.undefined;
 
-        if (file.size >10* 1024 * 1024) {
+        if (file.size >10 * 1024 * 1024) {
             removeTemp(file.tempFilePath)
             return res.status(400).json({ msg: "File is too large" });
         }

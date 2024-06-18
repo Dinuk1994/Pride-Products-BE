@@ -26,7 +26,7 @@ class APIfeatures {
     }
     paginating(){//http://localhost:5000/api/products?limit=2
         const page = this.queryString.page * 1 || 1
-        const limit = this.queryString.limit * 1 || 3 //selecting how many items that needs to display on a page
+        const limit = this.queryString.limit * 1 || 4 //selecting how many items that needs to display on a page
         const skip = (page - 1) * limit
         this.query = this.query.skip(skip).limit(limit)
         return this;
@@ -58,7 +58,7 @@ const productController = {
             const product = await products.findOne({ product_id })
             if (product) return res.status(400).json({ msg: "This product already exists" })
 
-            const newProduct = new products({ product_id, productName, images, category, description, price, checked })
+            const newProduct = new products({ product_id, productName, images,content, category, description, price, checked })
             newProduct.save();
             return res.json({ msg: "Product added" })
 
@@ -69,9 +69,9 @@ const productController = {
     },
     updateProducts: async (req, res) => {
         try {
-            const { productName, images, category, description, price, checked } = req.body
+            const { productName, images,content, category, description, price, checked } = req.body
             if (!images) return res.status(400).json({ msg: "No image uploaded" })
-            await products.findByIdAndUpdate({ _id: req.params.id }, { productName, images, category, description, price, checked })
+            await products.findByIdAndUpdate({ _id: req.params.id }, { productName, images,content, category, description, price, checked })
             return res.json({ msg: "Product update success" })
 
         } catch (err) {
